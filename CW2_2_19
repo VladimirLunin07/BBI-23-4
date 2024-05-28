@@ -1,0 +1,34 @@
+using System;
+using System.Text;
+using System.Linq;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        string inputText = "Когда я проснулась, за окном виднелось солнце. Лучики солнца согревали. Но пора уже было вставать. Я переоделась и вышла на кухню. Начав готовить завтрак, я села на диван. Затем включила телевизор, где показывали интересную программу. Но внимание мое привлек ужастик. Я усмехнулась, немного даже обрадовшись. Пришло время придираться. Я заново встала. Поправила свою одежду. Начав убираться, я чательно все осмотрела. Был беспорядок. Даже не беспорядок, а хаос. Я тежяло вздохнула. Но, как бы мне не хотелось, начала убираться. Аккуратно все убрав, я снова села. Но теперь за стол. Ароматный запах был на всю кухню. Я встала и принялась завтракать уже готовой едой.";
+        string result = FilterFreeWords(inputText);
+        Console.WriteLine($"Результат: {result}");
+    }
+
+    public static string FilterFreeWords(string text)
+    {
+        string[] words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < words.Length; i++)
+        {
+            string word = words[i];
+            bool isFirstWord = i == 0;
+            bool isLastWord = i == words.Length - 1;
+            if (word.All(char.IsLetter))
+            {
+                bool isFreeWord = isFirstWord || isLastWord || (text.Contains($" {word} "));
+                if (isFreeWord)
+                {
+                    result.Append(word + " ");
+                }
+            }
+        }
+        return result.ToString().Trim();
+    }
+}
