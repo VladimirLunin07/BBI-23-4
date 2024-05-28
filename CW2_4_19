@@ -1,0 +1,53 @@
+using System;
+using System.IO;
+using System.Text.Json;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        string inputTask1 = "Ваш входной текст для задания 1";
+        string inputFilePath1 = "input_task1.json";
+        SaveToFile(inputFilePath1, inputTask1);
+        string loadedInputTask1 = LoadFromFile(inputFilePath1);
+        Console.WriteLine($"Входные данные для задания 1: {loadedInputTask1}");
+        string resultTask1 = ProcessTask1(loadedInputTask1);
+        string outputFilePath1 = "output_task1.json";
+        SaveToFile(outputFilePath1, resultTask1);
+        Console.WriteLine($"Результат задания 1: {resultTask1}");
+        string inputTask2 = "Ваш входной текст для задания 2";
+        string inputFilePath2 = "input_task2.json";
+        SaveToFile(inputFilePath2, inputTask2);
+        string loadedInputTask2 = LoadFromFile(inputFilePath2);
+        Console.WriteLine($"Входные данные для задания 2: {loadedInputTask2}");
+        string resultTask2 = ProcessTask2(loadedInputTask2);
+        string outputFilePath2 = "output_task2.json";
+        SaveToFile(outputFilePath2, resultTask2);
+        Console.WriteLine($"Результат задания 2: {resultTask2}");
+    }
+
+
+    public static void SaveToFile(string filePath, string content)
+    {
+        File.WriteAllText(filePath, content);
+    }
+    public static string LoadFromFile(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            return File.ReadAllText(filePath);
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public static string ProcessTask1(string input)
+    {
+        return "Результат обработки задания 1";
+    }
+    public static string ProcessTask2(string input)
+    {
+        return "Результат обработки задания 2";
+    }
+}
