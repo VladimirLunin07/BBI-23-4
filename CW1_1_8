@@ -1,0 +1,63 @@
+using System;
+
+namespace GoodsApp
+{
+    struct Goods
+    {
+        public string Name { get; }
+        public string Description { get; private set; }
+        public decimal Price { get; }
+        public Guid Article { get; }
+
+        public Goods(string name, decimal price)
+        {
+            Name = name;
+            Price = price;
+            Article = Guid.NewGuid();
+            Description = $"Для товара {name} описание не задано";
+        }
+
+        public void PrintInfo()
+        {
+            Console.WriteLine($"Название: {Name}, Описание: {Description}, Стоимость: {Price:C}, Артикул: {Article}");
+        }
+
+        public void SetDescription(string description)
+        {
+            if (description.Length < 20 || description.Length > 200)
+            {
+                Console.WriteLine("Описание должно быть длиной от 20 до 200 символов.");
+            }
+            else
+            {
+                Description = description;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Goods[] goodsArray = new Goods[5];
+
+            goodsArray[0] = new Goods("Товар 1", 150.00m);
+            goodsArray[1] = new Goods("Товар 2", 250.00m);
+            goodsArray[2] = new Goods("Товар 3", 100.00m);
+            goodsArray[3] = new Goods("Товар 4", 300.00m);
+            goodsArray[4] = new Goods("Товар 5", 200.00m);
+
+            goodsArray[0].SetDescription("Описание товара 1, которое достаточно длинное.");
+            goodsArray[1].SetDescription("Описание товара 2, соответствующее всем требованиям.");
+            goodsArray[2].SetDescription("Описание товара 3, подходящее по длине.");
+
+            Array.Sort(goodsArray, (x, y) => x.Price.CompareTo(y.Price));
+
+            Console.WriteLine("| Название | Описание | Стоимость | Артикул |");
+            foreach (var goods in goodsArray)
+            {
+                Console.WriteLine($"| {goods.Name} | {goods.Description} | {goods.Price:C} | {goods.Article} |");
+            }
+        }
+    }
+}
