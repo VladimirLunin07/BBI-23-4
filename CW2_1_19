@@ -1,0 +1,32 @@
+using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        string text = "Когда я проснулась, за окном виднелось солнце. Лучики солнца согревали. Но пора уже было вставать. Я переоделась и вышла на кухню. Начав готовить завтрак, я села на диван. Затем включила телевизор, где показывали интересную программу. Но внимание мое привлек ужастик. Я усмехнулась, немного даже обрадовшись. Пришло время придираться. Я заново встала. Поправила свою одежду. Начав убираться, я чательно все осмотрела. Был беспорядок. Даже не беспорядок, а хаос. Я тежяло вздохнула. Но, как бы мне не хотелось, начала убираться. Аккуратно все убрав, я снова села. Но теперь за стол. Ароматный запах был на всю кухню. Я встала и принялась завтракать уже готовой едой.";
+        string shortestSentence = FindShortestSentence(text);
+        Console.WriteLine($"Самое короткое предложение: {shortestSentence}");
+    }
+
+    public static string FindShortestSentence(string text)
+    {
+        char[] sentenceDelimiters = new char[] { '.', '!', '?' };
+        string[] sentences = text.Split(sentenceDelimiters, StringSplitOptions.RemoveEmptyEntries);
+        string shortestSentence = string.Empty;
+        int minLength = int.MaxValue;
+        foreach (string sentence in sentences)
+        {
+            string trimmedSentence = sentence.Trim();
+            int length = trimmedSentence.Length;
+
+            if (length <= minLength)
+            {
+                minLength = length;
+                shortestSentence = trimmedSentence;
+            }
+        }
+
+        return shortestSentence;
+    }
+}
