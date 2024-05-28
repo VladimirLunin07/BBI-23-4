@@ -1,0 +1,125 @@
+using System;
+using System.Linq;
+
+public abstract class Goods
+{
+    public string Name { get; protected set; }
+    public string Description { get; protected set; }
+    public decimal BasePrice { get; protected set; }
+    public string SKU { get; private set; }
+    protected static Random random = new Random();
+
+    public Goods(string name, decimal price)
+    {
+        Name = name;
+        BasePrice = price;
+        Description = $"Для товара {name} описание не задано";
+        SKU = GenerateSKU();
+    }
+
+    private static string GenerateSKU()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, 10)
+          .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    public void SetDescription(string description)
+    {
+        if (description.Length < 20 || description.Length > 200)
+        {
+            throw new ArgumentException("Описание должно быть длиной от 20 до 200 символов.");
+        }
+        Description = description;
+    }
+
+    public abstract decimal GetPrice();
+
+    public void PrintInfo()
+    {
+        Console.WriteLine($"Название: {Name}");
+        Console.WriteLine($"Описание: {Description}");
+        Console.WriteLine($"Цена: {GetPrice():C}");
+        Console.WriteLine($"Артикул: {SKU}");
+        Console.WriteLine();
+    }
+}
+
+public class Beverage : Goods
+{
+    public double SugarConcentration { get; private set; }
+
+    public Beverage(string name, decimal price, double sugarConcentration)
+        : base(name, price)
+    {
+        SugarConcentration = sugarConcentration;
+    }
+
+    public override decimal GetPrice()
+    {
+        return SugarConcentration > 5 ? BasePrice * 1.10m : BasePrice;
+    }
+}
+
+public class Food : Goods
+{
+    public int ShelfLifeDays { get; private set; }
+
+    public Food(string name, decimal price, int shelfLifeDays)
+        : base(name, price)
+    {
+        ShelfLifeDays = shelfLifeDays;
+    }
+
+    public override decimal GetPrice()
+    {
+        if (ShelfLifeDays < 30)
+        {
+            return BasePrice * 1.05m;
+        }
+        else if (ShelfLifeDays > 365)
+        {
+            return BasePrice * 0.95m;
+        }
+        else
+        {
+            return BasePrice;
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Goods[] beverages = new Goods[5];
+        Goods[] foods = new Goods[5];
+
+        beverages[0] = new Beverage("Кола", 100, 10);
+        beverages[1] = new Beverage("Сок", 80, 4);
+        beverages[2] = new Beverage("Чай", 50, 0);
+        beverages[3] = new Beverage("Лимонад", 90, 6);
+        beverages[4] = new Beverage("Вода", 30, 0);
+
+        foods[0] = new Food("Bread", 20, 7);
+        foods[1] = new Food("Сыр", 120, 400);
+        foods[2] = new Food("Йогурт", 50, 20);
+        foods[3] = new Food("Фетучини", 70, 730);
+        foods[4] = new Food("Курица", 150, 10);
+
+        var sortedBeverages = beverages.OrderBy(b => b.GetPrice()).ToArray();
+        var sortedFoods = foods.OrderBy(f => f.GetPrice()).ToArray();
+
+        Console.WriteLine("Напитки, отсортированные по цене:");
+        foreach (var beverage in sortedBeverages)
+        {
+            beverage.PrintInfo();
+        }
+
+        Console.WriteLine("Продукты, отсортированные по цене:");
+        foreach (var food in sortedFoods)
+        {
+            food.PrintInfo();
+        }
+    }
+}
